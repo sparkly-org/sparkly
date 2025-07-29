@@ -1,0 +1,14 @@
+dependencies {
+    implementation project(':sparkly-api')
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    implementation 'io.netty:netty-all:4.2.3.Final'
+    implementation 'org.yaml:snakeyaml:2.2'
+
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+
+    implementation 'net.kyori:adventure-api:4.17.0'
+    implementation 'net.kyori:adventure-text-minimessage:4.17.0'
+    implementation 'net.kyori:adventure-text-serializer-gson:4.17.0'
+}

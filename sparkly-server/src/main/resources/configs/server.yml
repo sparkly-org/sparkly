@@ -1,0 +1,36 @@
+# Configures what the server will display as the server brand
+brand: "sparkly"
+
+# Configures the text that should be displayed when is shown in the server list
+motd: "Powered by <yellow>sparkly</yellow>!"
+
+# Configures the port where the server should listen on
+port: 25565
+
+# Configures the amount of threads to use for ticking worlds
+ticking_threads: 8
+
+# Configures the amount of netty threads that will be allocated
+netty_threads: 4
+
+# Regex to filter for usernames
+username_filter: "([a-zA-Z0-9_])*"
+
+# Format of the chat messages
+# Parameters: username, message
+chat_format: "%s: %s"
+
+# Amount of ticks per second
+ticks_per_second: 20
+
+# Text shown when hovering the ping icon in the server list
+ping_version_hover: "&c1.8.9"
+
+# The difficulty of the world
+difficulty: 1
+
+# Maximum amount of players allowed on the server
+max_players: 100
+
+# The radius where chunks gets sent
+render_distance: 16

@@ -1,0 +1,3 @@
+rootProject.name = 'sparkly'
+include 'sparkly-api'
+include 'sparkly-server'

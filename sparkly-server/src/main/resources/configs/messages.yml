@@ -1,0 +1,5 @@
+# Shown when the default world is missing
+missing_world: "<red>Missing a default world!</red>"
+
+# Shown when the player is using a username that doesn't match the regex
+invalid_username: "<red>The chosen username is invalid!</red>"

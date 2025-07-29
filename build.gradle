@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'net.sparkly'
+version = '2.0'
+
+subprojects {
+    version = rootProject.version
+    group = rootProject.group
+
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+}
