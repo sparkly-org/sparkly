@@ -19,8 +19,7 @@ public class MessageSplitter extends ByteToMessageDecoder {
         int length = buffer.readVarInt();
         
         if (buffer.remaining() >= length) {
-            byte[] bytes = buffer.readBytes(length);
-            list.add(bytes);
+            list.add(buffer.readBytes(length));
             return;
         }
         

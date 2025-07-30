@@ -8,6 +8,6 @@ public class PacketHandler extends SimpleChannelInboundHandler<Packet> {
     
     @Override
     protected void channelRead0(ChannelHandlerContext context, Packet packet) {
-    
+        System.out.println("gotten to packet handler");
     }
 }

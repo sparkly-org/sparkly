@@ -17,17 +17,15 @@ public class MinecraftPipeline extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel channel) {
         ChannelPipeline pipeline = channel.pipeline();
         
-        pipeline.addLast("timeout", new ReadTimeoutHandler(30));
-        pipeline.addLast("state_handler", new StateHandler());
-        
-        // Reading packets
-        pipeline.addLast("splitter", new MessageSplitter());
-        pipeline.addLast("decoder", new PacketDecoder());
-        
-        // Writing packets
-        pipeline.addLast("prepender", new MessagePrepender());
-        pipeline.addLast("encoder", new PacketEncoder());
-        
-        pipeline.addLast("packet_handler", new PacketHandler());
+        pipeline.addLast("timeout", new ReadTimeoutHandler(30))
+            .addLast("state_handler", new StateHandler())
+            // Reading packets
+            .addLast("splitter", new MessageSplitter())
+            .addLast("decoder", new PacketDecoder())
+            // Writing packets
+            .addLast("prepender", new MessagePrepender())
+            .addLast("encoder", new PacketEncoder())
+            // Handling
+            .addLast("packet_handler", new PacketHandler());
     }
 }
