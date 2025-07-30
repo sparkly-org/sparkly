@@ -14,21 +14,24 @@ public class MinecraftServer {
     public static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
     
     private final Logger logger = LogManager.getLogger(MinecraftServer.class);
-    private final ExecutorService tickingService;
     private final ServerConfig config;
-    
+
+    private ExecutorService tickingService;
+
     public MinecraftServer() {
         this.config = new ServerConfig(this);
-        this.tickingService = Executors.newFixedThreadPool(config.tickingThreads());
     }
     
     public void start() {
         long start = System.nanoTime();
         logger.info("Booting up sparkly...");
         
-        this.config.load();
+        config.load();
         logger.info("Configuration loaded");
-        
+
+        tickingService = Executors.newFixedThreadPool(config.tickingThreads());
+        logger.info("Created thread pool for ticking");
+
         long took = System.nanoTime() - start;
         double tookSeconds = took / 1e9;
         

@@ -13,38 +13,43 @@ public class ServerConfig {
     public ServerConfig(MinecraftServer server) {
         this.server = server;
     }
-    
+
+
     public void load() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        
+        File configDir = new File("configs");
+
+        if (!configDir.exists()) configDir.mkdirs();
+
         for (Config config : Config.values()) {
-            try (InputStream inputStream = classLoader.getResourceAsStream("configs/" + config.path())) {
-                if (inputStream == null) {
-                    throw new FileNotFoundException("Configuration file " + config.path() + " was not found!");
-                }
-                
-                config.loadValues(yaml.load(inputStream));
+            File file = new File(configDir, config.path());
+
+            if (!file.exists()) {
+                createFromResources(file);
+            }
+
+            try (InputStream fileStream = new FileInputStream(file)) {
+                config.loadValues(yaml.load(fileStream));
             } catch (Exception e) {
                 server.logger().error("Exception while reading {}", config.path(), e);
             }
         }
     }
-    
+
     private void createFromResources(File file) {
-        String fileName = file.getName();
-        
-        try (InputStream resource = ServerConfig.class.getResourceAsStream("config/" + fileName);
-             FileWriter fileWriter = new FileWriter(file);
-             BufferedWriter writer = new BufferedWriter(fileWriter)) {
-            
+        String resourcePath = "/configs/" + file.getName();
+
+        try (InputStream resource = getClass().getResourceAsStream(resourcePath)) {
             if (resource == null) {
-                throw new FileNotFoundException(fileName + " was not found.");
+                throw new FileNotFoundException("Resource not found: " + resourcePath);
             }
-            
-            writer.write(new String(resource.readAllBytes()));
-            writer.flush();
+
+            try (OutputStream out = new FileOutputStream(file)) {
+                resource.transferTo(out);
+            }
+
+            server.logger().info("Created config file from resources: {}", file.getName());
         } catch (Exception e) {
-            server.logger().error("Exception while creating {}", fileName, e);
+            server.logger().error("Exception while creating {}", file.getName(), e);
         }
     }
     
