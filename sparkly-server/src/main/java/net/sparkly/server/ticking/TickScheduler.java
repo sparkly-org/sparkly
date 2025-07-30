@@ -23,55 +23,54 @@ public record TickScheduler(MinecraftServer server, SparklyWorld world) implemen
             return;
         }
 
-        try (ExecutorService executorService = server.tickingService()){
-            int availableThreads = getAvailableProcessors(executorService);
-            int total = chunks.size();
+        ExecutorService executorService = server.tickingService();
 
-            int batchSize = calculateBatchSize(total, availableThreads);
+        int availableThreads = getAvailableProcessors(executorService);
+        int total = chunks.size();
+
+        int batchSize = calculateBatchSize(total, availableThreads);
 
 
-            SparklyChunk[] chunkArray = chunks.toArray(new SparklyChunk[0]);
+        SparklyChunk[] chunkArray = chunks.toArray(new SparklyChunk[0]);
 
-            AtomicInteger completedBatches = new AtomicInteger(0);
-            int numBatches = (total + batchSize - 1) / batchSize;
+        AtomicInteger completedBatches = new AtomicInteger(0);
+        int numBatches = (total + batchSize - 1) / batchSize;
 
-            CompletableFuture<?>[] futures = new CompletableFuture[numBatches];
+        CompletableFuture<?>[] futures = new CompletableFuture[numBatches];
 
-            for (int i = 0; i < total; i += batchSize) {
-                final int start = i;
-                final int end = Math.min(i + batchSize, total);
-                final int batchIndex = i / batchSize;
+        for (int i = 0; i < total; i += batchSize) {
+            final int start = i;
+            final int end = Math.min(i + batchSize, total);
+            final int batchIndex = i / batchSize;
 
-                futures[batchIndex] = CompletableFuture.runAsync(() -> {
-                    try {
-                        processBatch(chunkArray, start, end);
-                    }catch (Exception e){
-                        server.logger().error("Error processing chunk batch [{}-{})", start, end, e);
-                    } finally {
-                        completedBatches.incrementAndGet();
-                    }
-                }, executorService).exceptionally(throwable -> {
-                    server.logger().error("Error processing chunk batch [{}-{})", start, end, throwable);
-                    return null;
-                });
-            }
-
-            try {
-                CompletableFuture.allOf(futures).get(5, TimeUnit.SECONDS);
-            }catch (TimeoutException exception){
-                server.logger().error("Timeout while processing chunk batches", exception);
-            }catch (InterruptedException | ExecutionException exception){
-                if (!Thread.currentThread().isInterrupted()){
-                    Thread.currentThread().interrupt();
+            futures[batchIndex] = CompletableFuture.runAsync(() -> {
+                try {
+                    processBatch(chunkArray, start, end);
+                }catch (Exception e){
+                    server.logger().error("Error processing chunk batch [{}-{})", start, end, e);
+                } finally {
+                    completedBatches.incrementAndGet();
                 }
-                server.logger().error("Error while processing chunk batches", exception);
-            } finally {
-                if (!Thread.currentThread().isInterrupted()){
-                    Thread.currentThread().interrupt();
-                }
-            }
+            }, executorService).exceptionally(throwable -> {
+                server.logger().error("Error processing chunk batch [{}-{})", start, end, throwable);
+                return null;
+            });
         }
 
+        try {
+            CompletableFuture.allOf(futures).get(5, TimeUnit.SECONDS);
+        }catch (TimeoutException exception){
+            server.logger().error("Timeout while processing chunk batches", exception);
+        }catch (InterruptedException | ExecutionException exception){
+            if (!Thread.currentThread().isInterrupted()){
+                Thread.currentThread().interrupt();
+            }
+            server.logger().error("Error while processing chunk batches", exception);
+        } finally {
+            if (!Thread.currentThread().isInterrupted()){
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     private void processBatch(SparklyChunk[] chunks, int start, int end){
