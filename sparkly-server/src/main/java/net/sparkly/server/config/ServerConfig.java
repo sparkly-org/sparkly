@@ -83,8 +83,8 @@ public class ServerConfig {
         return (String) Config.SERVER.configValues().get("chat_format");
     }
     
-    public int ticksPerSecond() {
-        return (int) Config.SERVER.configValues().get("ticks_per_second");
+    public int tickRate() {
+        return (int) Config.SERVER.configValues().get("tick_rate");
     }
     
     public String pingVersionHover() {

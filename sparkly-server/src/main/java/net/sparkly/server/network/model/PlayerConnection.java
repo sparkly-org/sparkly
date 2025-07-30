@@ -17,9 +17,9 @@ public final class PlayerConnection {
     
     private final MinecraftServer server;
     private final Channel channel;
-    private final SparkyPlayer player;
     private final StateHandler stateHandler;
-    
+    private SparkyPlayer player;
+
     public PlayerConnection(MinecraftServer server, Channel channel, SparkyPlayer player) {
         this.server = server;
         this.channel = channel;
@@ -55,7 +55,7 @@ public final class PlayerConnection {
     
     public void flushPacket(Packet.Server packet) {
         if (channel == null || !channel.isOpen()) return;
-        
+
         channel.writeAndFlush(packet);
     }
     
@@ -70,12 +70,16 @@ public final class PlayerConnection {
     public Channel channel() {
         return channel;
     }
-    
+
+    public StateHandler stateHandler() {
+        return stateHandler;
+    }
+
     public SparkyPlayer player() {
         return player;
     }
-    
-    public StateHandler stateHandler() {
-        return stateHandler;
+
+    public void setPlayer(SparkyPlayer player) {
+        this.player = player;
     }
 }

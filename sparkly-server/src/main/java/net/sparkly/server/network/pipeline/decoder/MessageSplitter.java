@@ -1,6 +1,7 @@
 package net.sparkly.server.network.pipeline.decoder;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import net.sparkly.server.network.NetworkBuffer;
@@ -19,7 +20,8 @@ public class MessageSplitter extends ByteToMessageDecoder {
         int length = buffer.readVarInt();
         
         if (buffer.remaining() >= length) {
-            list.add(buffer.readBytes(length));
+            byte[] bytes = buffer.readBytes(length);
+            list.add(Unpooled.wrappedBuffer(bytes));
             return;
         }
         

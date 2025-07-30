@@ -1,24 +1,28 @@
 package net.sparkly.server.event;
 
-import net.sparkly.api.event.Event;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class EventNode<T extends Event> {
-    
-    private final Map<Class<T>, List<Consumer<T>>> listeners = new HashMap<>();
+public class EventNode<T> {
 
-    public void addListener(Class<T> eventClass, Consumer<T> consumer) {
-        listeners.computeIfAbsent(eventClass, k -> new ArrayList<>())
-            .add(consumer);
+    private final Map<Class<? extends T>, List<Consumer<T>>> listeners = new HashMap<>();
+
+    public <E extends T> void addListener(Class<E> eventClass, Consumer<E> consumer) {
+        List<Consumer<T>> list = listeners.computeIfAbsent(eventClass, k -> new ArrayList<>());
+        list.add(event -> {
+            E casted = eventClass.cast(event);
+            consumer.accept(casted);
+        });
     }
-    
+
+    @SuppressWarnings("unchecked")
     public void call(T event) {
-        for (Consumer<T> consumer : listeners.get(event.getClass())) {
+        Class<? extends T> clazz = (Class<? extends T>) event.getClass();
+        List<Consumer<T>> list = listeners.get(clazz);
+
+        if (list == null) return;
+
+        for (Consumer<T> consumer : list) {
             consumer.accept(event);
         }
     }

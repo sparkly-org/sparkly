@@ -34,7 +34,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet.Server> {
                 "Packet " + packet.getClass().getSimpleName() + " is not registered for state " + state.name()
             );
         }
-        
+
         buffer.writeVarInt(optionalPacketId.get());
         packet.write(buffer);
     }

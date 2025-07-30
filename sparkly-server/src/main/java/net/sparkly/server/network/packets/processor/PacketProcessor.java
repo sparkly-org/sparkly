@@ -25,8 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 public record PacketProcessor(MinecraftServer server, PlayerConnection connection) {
-    
-    private static final ExecutorService HANDSHAKE_THREAD = createService("Async Handshake Thread - #%d");
+
     private static final ExecutorService LOGIN_THREAD = createService("Async Login Thread - #%d");
     private static final ExecutorService CHAT_THREAD = createService("Async Chat Thread - #%d");
     
@@ -42,25 +41,23 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
     }
     
     public void handleHandshake(ClientHandshake packet) {
-        HANDSHAKE_THREAD.submit(() -> {
-            PlayerHandshakeEvent event = new PlayerHandshakeEvent(
-                packet.address(),
-                packet.port(),
-                packet.protocolVersion(),
-                packet.nextState()
-            );
-            
-            server.eventHandler().call(event);
-            
-            if (event.cancelled()) return;
-            
-            ConnectionState nextConnectionState = switch (event.state()) {
-                case LOGIN -> ConnectionState.LOGIN;
-                case STATUS -> ConnectionState.STATUS;
-            };
-            
-            connection.setConnectionState(nextConnectionState);
-        });
+        PlayerHandshakeEvent event = new PlayerHandshakeEvent(
+            packet.address(),
+            packet.port(),
+            packet.protocolVersion(),
+            packet.nextState()
+        );
+
+        server.eventHandler().call(event);
+
+        if (event.cancelled()) return;
+
+        ConnectionState nextConnectionState = switch (event.state()) {
+            case LOGIN -> ConnectionState.LOGIN;
+            case STATUS -> ConnectionState.STATUS;
+        };
+
+        connection.setConnectionState(nextConnectionState);
     }
     
     public void handlePing(ClientPing packet) {
@@ -68,17 +65,15 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
     }
     
     public void handleStatusRequest(ClientStatusRequest packet) {
-        HANDSHAKE_THREAD.submit(() -> {
-            ServerConfig config = server.config();
-            
-            ServerStatusResponse response = new ServerStatusResponse(
-                new ServerStatusResponse.Players(config.maxPlayers(), 5),
-                new ServerStatusResponse.Version(config.pingVersionHover(), 47),
-                new ServerStatusResponse.Description(config.motd())
-            );
-            
-            connection.sendPacket(response);
-        });
+        ServerConfig config = server.config();
+
+        ServerStatusResponse response = new ServerStatusResponse(
+            new ServerStatusResponse.Players(config.maxPlayers(), 5),
+            new ServerStatusResponse.Version(config.pingVersionHover(), 47),
+            new ServerStatusResponse.Description(config.motd())
+        );
+
+        connection.sendPacket(response);
     }
     
     public void handleLoginStart(ClientLoginStart packet) {

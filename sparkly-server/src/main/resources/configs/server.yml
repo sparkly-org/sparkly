@@ -20,8 +20,9 @@ username_filter: "([a-zA-Z0-9_])*"
 # Parameters: username, message
 chat_format: "%s: %s"
 
-# Amount of ticks per second
-ticks_per_second: 20
+# Configures how fast the server goes, default = 20
+# A tick_rate of 20 means 20 updates per second, higher tick rate = higher cpu usage
+tick_rate: 20
 
 # Text shown when hovering the ping icon in the server list
 ping_version_hover: "&c1.8.9"

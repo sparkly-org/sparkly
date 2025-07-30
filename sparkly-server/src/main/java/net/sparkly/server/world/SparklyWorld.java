@@ -6,9 +6,7 @@ import net.sparkly.api.position.Position;
 import net.sparkly.api.world.World;
 import net.sparkly.api.world.chunk.Chunk;
 import net.sparkly.api.world.chunk.ChunkSection;
-import net.sparkly.server.MinecraftServer;
 import net.sparkly.server.block.SparklyBlock;
-import net.sparkly.server.ticking.TickScheduler;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,16 +16,10 @@ public class SparklyWorld implements World {
     
     private final Map<Long, Chunk> chunks;
     private final String name;
-    private final TickScheduler tickScheduler;
-    
-    public SparklyWorld(MinecraftServer server, String name) {
+
+    public SparklyWorld(String name) {
         this.name = name;
         this.chunks = new HashMap<>();
-        this.tickScheduler = new TickScheduler(server, this);
-    }
-    
-    public void tick() {
-        tickScheduler.run();
     }
     
     @Override

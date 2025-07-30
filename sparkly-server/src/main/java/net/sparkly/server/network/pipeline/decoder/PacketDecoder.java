@@ -32,12 +32,10 @@ public class PacketDecoder extends ByteToMessageDecoder {
         if (optionalPacket.isEmpty()) {
             throw new IllegalStateException("Packet with id " + id + " at state " + state.name() + " not found!");
         }
-        
+
         Packet.Client packet = (Packet.Client) optionalPacket.get();
         packet.read(buffer);
-        
-        System.out.println("Received packet with name " + packet.getClass().getSimpleName() + " uwu");
-        
+
         if (buffer.remaining() > 0) {
             String message = String.format(
                 "Packet %s/%d (%s) was larger than expected, found %d bytes extra whilst reading packet %d",
