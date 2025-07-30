@@ -49,21 +49,19 @@ public class MinecraftServer implements Server {
         logger.info("Booting up sparkly...");
 
         config.load();
-        logger.info("Configuration loaded");
+        logger.info("Loaded the configuration");
         
         this.tickingService = Executors.newFixedThreadPool(config.tickingThreads());
-        logger.info("Created thread pool for ticking");
-
         this.networkManager = new NetworkManager(this);
-        networkManager.start();
-        logger.info("Server open on port {}", config.port());
 
+        networkManager.start();
         gameLoop.start();
 
         long took = System.nanoTime() - start;
         double tookSeconds = took / 1e9;
 
-        logger.info("Sparkly has started in {} seconds.", String.format("%.3f", tookSeconds));
+        logger.info("Server bound on port {}", config.port());
+        logger.info("Sparkly has loaded in {} seconds.", String.format("%.3f", tookSeconds));
     }
 
     @Override
