@@ -5,9 +5,10 @@ import net.sparkly.api.world.chunk.ChunkSection;
 import net.sparkly.server.block.SparklyBlock;
 
 public class SparklySection implements ChunkSection {
-    
-    public char[] blocks;
-    
+
+    private final char[] blocks;
+    private int nonAirBlocks;
+
     public SparklySection() {
         this.blocks = new char[4096];
     }
@@ -24,6 +25,19 @@ public class SparklySection implements ChunkSection {
     
     @Override
     public void setBlockAt(int x, int y, int z, char value) {
+        if (blockAt(x, y, z) == 0) {
+            this.nonAirBlocks--;
+        }
+
+        if (value != 0) {
+            this.nonAirBlocks++;
+        }
+
         blocks[y << 8 | z << 4 | x] = value;
+    }
+
+    @Override
+    public int nonAirBlocks() {
+        return nonAirBlocks;
     }
 }

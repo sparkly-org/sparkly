@@ -1,4 +1,4 @@
-package net.sparkly.server.network.packets.impl.server.status;
+package net.sparkly.server.network.packets.impl.server.play;
 
 import net.sparkly.server.network.NetworkBuffer;
 import net.sparkly.server.network.packets.Packet;

@@ -9,9 +9,7 @@ import net.sparkly.server.network.packets.impl.client.login.ClientLoginStart;
 import net.sparkly.server.network.packets.impl.client.play.*;
 import net.sparkly.server.network.packets.impl.server.login.ServerLoginDisconnect;
 import net.sparkly.server.network.packets.impl.server.login.ServerLoginSuccess;
-import net.sparkly.server.network.packets.impl.server.play.ServerDisconnect;
-import net.sparkly.server.network.packets.impl.server.status.ServerJoinGame;
-import net.sparkly.server.network.packets.impl.server.status.ServerKeepAlive;
+import net.sparkly.server.network.packets.impl.server.play.*;
 import net.sparkly.server.network.packets.impl.server.status.ServerPong;
 import net.sparkly.server.network.packets.impl.server.status.ServerStatusResponse;
 
@@ -63,14 +61,14 @@ public enum ConnectionState {
             
             register(SERVER, 0x00, ServerKeepAlive::new);
             register(SERVER, 0x01, ServerJoinGame::new);
-//            register(SERVER, 0x02, ServerChatMessage::new);
-//            register(SERVER, 0x03, ServerTimeUpdate::new);
-//            register(SERVER, 0x05, ServerSpawnPosition::new);
-//            register(SERVER, 0x06, ServerUpdateHealth::new);
-//            register(SERVER, 0x07, ServerRespawn::new);
-//            register(SERVER, 0x08, ServerPositionAndLook::new);
-//            register(SERVER, 0x21, ServerChunkData::new);
-//            register(SERVER, 0x26, ServerChunkDataBulk::new);
+            register(SERVER, 0x02, ServerChatMessage::new);
+            register(SERVER, 0x03, ServerTimeUpdate::new);
+            register(SERVER, 0x05, ServerSpawnPosition::new);
+            register(SERVER, 0x06, ServerUpdateHealth::new);
+            register(SERVER, 0x07, ServerRespawn::new);
+            register(SERVER, 0x08, ServerPositionAndLook::new);
+            register(SERVER, 0x21, ServerChunkData::new);
+            register(SERVER, 0x26, ServerChunkDataBulk::new);
             register(SERVER, 0x40, ServerDisconnect::new);
         }
     };
