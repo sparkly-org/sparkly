@@ -1,5 +1,6 @@
 package net.sparkly.server.config;
 
+import net.kyori.adventure.text.Component;
 import net.sparkly.server.MinecraftServer;
 import org.yaml.snakeyaml.Yaml;
 
@@ -57,8 +58,9 @@ public class ServerConfig {
         return (String) Config.SERVER.configValues().get("brand");
     }
     
-    public String motd() {
-        return (String) Config.SERVER.configValues().get("motd");
+    public Component motd() {
+        String motd = (String) Config.SERVER.configValues().get("motd");
+        return MinecraftServer.MINI_MESSAGE.deserialize(motd);
     }
     
     public int port() {

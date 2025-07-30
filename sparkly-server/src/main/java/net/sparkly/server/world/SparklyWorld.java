@@ -37,7 +37,7 @@ public class SparklyWorld implements World {
     
     @Override
     public void setBlock(int x, int y, int z, Block block) {
-        Chunk chunk = chunkAt(x, z);
+        Chunk chunk = chunkAt(x >> 4, z >> 4); // >> 4 = / 16
         
         if (chunk == null) return;
         
@@ -50,7 +50,7 @@ public class SparklyWorld implements World {
     
     @Override
     public Block blockAt(int x, int y, int z) {
-        Chunk chunk = chunkAt(x, z);
+        Chunk chunk = chunkAt(x >> 4, z >> 4);
         
         if (chunk == null) return null;
         

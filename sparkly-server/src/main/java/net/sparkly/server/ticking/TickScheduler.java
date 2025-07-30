@@ -5,7 +5,6 @@ import net.sparkly.server.MinecraftServer;
 import net.sparkly.server.world.SparklyWorld;
 import net.sparkly.server.world.chunk.SparklyChunk;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -14,9 +13,7 @@ public record TickScheduler(MinecraftServer server, SparklyWorld world) implemen
     @Override
     public void run() {
         ExecutorService executor = server.tickingService();
-        
         List<Chunk> chunks = List.copyOf(world.chunks());
-        List<Callable<Void>> tasks = new ArrayList<>();
         
         int total = chunks.size();
         int batchSize = 16;
@@ -33,6 +30,7 @@ public record TickScheduler(MinecraftServer server, SparklyWorld world) implemen
                     SparklyChunk chunk = (SparklyChunk) chunks.get(j);
                     chunk.tick();
                 }
+                
                 latch.countDown();
             });
         }

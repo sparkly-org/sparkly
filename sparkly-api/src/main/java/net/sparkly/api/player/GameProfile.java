@@ -4,27 +4,27 @@ import java.util.UUID;
 
 public class GameProfile {
 
-    private UUID uniqueId;
-    private String username;
+    private UUID uuid;
+    private String name;
 
-    public GameProfile(UUID uniqueId, String username) {
-        this.uniqueId = uniqueId;
-        this.username = username;
+    public GameProfile(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
     }
 
-    public UUID uniqueId() {
-        return uniqueId;
+    public UUID uuid() {
+        return uuid;
     }
 
-    public void setUniqueId(UUID uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String username() {
-        return username;
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 }

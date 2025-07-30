@@ -67,4 +67,16 @@ public class Position {
     public void setZ(double z) {
         this.z = z;
     }
+    
+    public int blockX() {
+        return (int) x;
+    }
+    
+    public int blockY() {
+        return (int) y;
+    }
+    
+    public int blockZ() {
+        return (int) z;
+    }
 }
