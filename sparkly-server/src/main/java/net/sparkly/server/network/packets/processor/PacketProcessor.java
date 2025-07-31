@@ -155,13 +155,14 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
                         int dataSize = extractedData.data.length;
                         
                         if (totalSize + dataSize < limit) {
-                            chunks.add(chunk);
                             totalSize += dataSize;
                         } else {
                             chunkDataBulks.add(new ServerChunkDataBulk(chunks));
                             chunks.clear();
                             totalSize = 0;
                         }
+                        
+                        chunks.add(chunk);
                     }
                 }
                 
