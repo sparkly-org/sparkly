@@ -141,7 +141,7 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
                 
                 int renderDistance = config.renderDistance() / 2;
                 int totalSize = 0;
-                int limit = 2097152;
+                int limit = 1800000;
                 
                 for (int x = -renderDistance; x < renderDistance; x++) {
                     for (int z = -renderDistance; z < renderDistance; z++) {
@@ -164,6 +164,10 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
                         
                         chunks.add(chunk);
                     }
+                }
+                
+                if (!chunks.isEmpty()) {
+                    chunkDataBulks.add(new ServerChunkDataBulk(chunks));
                 }
                 
                 for (Packet.Server bulk : chunkDataBulks) {
