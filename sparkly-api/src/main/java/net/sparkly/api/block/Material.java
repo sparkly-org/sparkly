@@ -225,4 +225,8 @@ public enum Material {
     public char id() {
         return id;
     }
+    
+    public char state() {
+        return (char) (id << 4);
+    }
 }

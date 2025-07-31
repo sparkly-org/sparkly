@@ -4,11 +4,13 @@ import net.sparkly.api.world.World;
 import net.sparkly.server.MinecraftServer;
 import net.sparkly.server.event.EventNode;
 import net.sparkly.server.event.impl.PlayerChatEvent;
+import net.sparkly.server.world.generator.unit.impl.RandomWorldGenerator;
 
 public class SparkyLoader {
     
     public static void main(String[] args) {
         MinecraftServer server = new MinecraftServer();
+        server.setChunkGenerator(new RandomWorldGenerator(60));
         server.start();
         
         World world = server.worlds().getFirst();
