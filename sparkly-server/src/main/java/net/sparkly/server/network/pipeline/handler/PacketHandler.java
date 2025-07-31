@@ -7,7 +7,6 @@ import net.sparkly.server.MinecraftServer;
 import net.sparkly.server.network.model.PlayerConnection;
 import net.sparkly.server.network.packets.Packet;
 import net.sparkly.server.network.packets.processor.PacketProcessor;
-import net.sparkly.server.player.SparkyPlayer;
 
 public class PacketHandler extends SimpleChannelInboundHandler<Packet.Client> {
 

@@ -37,7 +37,7 @@ public class SparklyWorld implements World {
     
         if (section == null) return;
         
-        section.setBlockAt(x & 15, y & 15, z & 15, block.state());
+        section.setBlock(x & 15, y & 15, z & 15, block.state());
     }
     
     @Override
@@ -51,11 +51,9 @@ public class SparklyWorld implements World {
         if (section == null) return null;
         
         char data = section.blockAt(x & 15, y & 15, z & 15);
-
-        Position position = new Position(x, y, z);
-        Material material = Material.fromCombinedId(data);
         
-        return new SparklyBlock(material, position);
+        Position position = new Position(x, y, z);
+        return SparklyBlock.fromCombined(data, position);
     }
     
     @Override
@@ -66,6 +64,11 @@ public class SparklyWorld implements World {
     @Override
     public Chunk chunkAt(int x, int z) {
         return chunks.get(chunkId(x, z));
+    }
+    
+    @Override
+    public void addChunk(int chunkX, int chunkZ, Chunk chunk) {
+        chunks.put(chunkId(chunkX, chunkZ), chunk);
     }
     
     private long chunkId(int x, int z) {

@@ -4,6 +4,7 @@ import net.sparkly.api.world.chunk.Chunk;
 import net.sparkly.server.network.NetworkBuffer;
 import net.sparkly.server.network.packets.Packet;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ServerChunkDataBulk implements Packet.Server {
@@ -15,10 +16,10 @@ public class ServerChunkDataBulk implements Packet.Server {
 
     public ServerChunkDataBulk() {
     }
-
+    
     public ServerChunkDataBulk(List<Chunk> chunks) {
         int amount = chunks.size();
-
+        
         this.xPositions = new int[amount];
         this.zPositions = new int[amount];
 
@@ -29,8 +30,8 @@ public class ServerChunkDataBulk implements Packet.Server {
             Chunk chunk = chunks.get(j);
 
             ServerChunkData.Extracted extractedData = ServerChunkData.extractData(chunk,
-                    true, false, 65535);
-
+                    true, true, 65535);
+            
             this.xPositions[j] = chunk.x();
             this.zPositions[j] = chunk.z();
 

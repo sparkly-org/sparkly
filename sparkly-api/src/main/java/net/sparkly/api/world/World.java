@@ -15,4 +15,6 @@ public interface World {
     Collection<Chunk> chunks();
     
     Chunk chunkAt(int x, int z);
+    
+    void addChunk(int chunkX, int chunkZ, Chunk chunk);
 }

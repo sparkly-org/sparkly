@@ -7,5 +7,7 @@ public interface Block {
     
     Position position();
     
+    int data();
+    
     char state();
 }

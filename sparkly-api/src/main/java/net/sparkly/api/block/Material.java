@@ -204,44 +204,25 @@ public enum Material {
     ACACIA_DOOR(196),
     DARK_OAK_DOOR(197);
     
-    private static final Map<Character, Material> blockStates = new HashMap<>();
+    public static final Map<Character, Material> BLOCK_STATES = new HashMap<>();
     
     static {
         for (Material value : values()) {
-            blockStates.put(value.id(), value);
+            BLOCK_STATES.put(value.id(), value);
         }
     }
     
     private final char id;
-    private int data;
     
     Material(int id) {
         this.id = (char) id;
     }
     
     public static Material fromId(char id) {
-        return blockStates.get(id);
-    }
-    
-    public static Material fromCombinedId(int combinedId) {
-        char id = (char) (combinedId >> 4);
-        int data = combinedId & 15;
-        
-        Material block = blockStates.get(id);
-        block.setData(data);
-        
-        return block;
+        return BLOCK_STATES.get(id);
     }
     
     public char id() {
         return id;
-    }
-    
-    public char state() {
-        return (char) (id << 4 | data);
-    }
-    
-    public void setData(int data) {
-        this.data = data;
     }
 }

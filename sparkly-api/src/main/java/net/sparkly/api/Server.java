@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.sparkly.api.player.Player;
 import net.sparkly.api.world.World;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface Server {
     void start();
@@ -14,8 +14,10 @@ public interface Server {
     boolean running();
 
     void broadcast(Component message);
-
-    Collection<World> worlds();
-
-    Collection<Player> players();
+    
+    void schedule(Runnable task);
+    
+    List<World> worlds();
+    
+    List<Player> players();
 }

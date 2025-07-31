@@ -24,11 +24,7 @@ public class SparklySection implements ChunkSection {
     }
     
     @Override
-    public void setBlockAt(int x, int y, int z, char value) {
-        if (blockAt(x, y, z) == 0) {
-            this.nonAirBlocks--;
-        }
-
+    public void setBlock(int x, int y, int z, char value) {
         if (value != 0) {
             this.nonAirBlocks++;
         }

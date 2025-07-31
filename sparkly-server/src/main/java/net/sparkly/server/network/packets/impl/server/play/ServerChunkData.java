@@ -40,7 +40,7 @@ public class ServerChunkData implements Packet.Server {
 
         for (int y = 0; y < 16; y++) {
             ChunkSection section = chunk.sectionAt(y);
-
+            
             if (section != null && (!groundUpContinuous || section.nonAirBlocks() > 0) && (blockMask & 1 << y) != 0) {
                 extracted.dataSize |= 1 << y;
                 nonEmptySections.add(section);

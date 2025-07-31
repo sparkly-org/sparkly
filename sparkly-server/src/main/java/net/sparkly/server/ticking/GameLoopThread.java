@@ -6,6 +6,7 @@ import net.sparkly.server.MinecraftServer;
 import net.sparkly.server.network.NetworkManager;
 import net.sparkly.server.world.chunk.SparklyChunk;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +14,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class GameLoopThread extends Thread {
 
+    private final List<Runnable> scheduledTasks = new ArrayList<>();
     private final MinecraftServer server;
 
     public GameLoopThread(MinecraftServer server) {
@@ -34,7 +36,15 @@ public class GameLoopThread extends Thread {
         Thread.ofPlatform().name("game-loop-worker").daemon().start(runnable);
     }
 
+    public void addTask(Runnable task) {
+        scheduledTasks.add(task);
+    }
+    
     private void tick() {
+        for (Runnable task : scheduledTasks) {
+            task.run();
+        }
+        
         ExecutorService executor = server.tickingService();
         NetworkManager networkManager = server.networkManager();
 
@@ -43,6 +53,7 @@ public class GameLoopThread extends Thread {
         }
 
         networkManager.allChannels().flush();
+        scheduledTasks.clear();
     }
 
     private void tickWorld(World world, ExecutorService executor) {

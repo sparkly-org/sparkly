@@ -1,5 +1,6 @@
 package net.sparkly.server.network.packets.impl.client.play;
 
+import io.netty.buffer.Unpooled;
 import net.sparkly.server.network.NetworkBuffer;
 import net.sparkly.server.network.packets.Packet;
 import net.sparkly.server.network.packets.processor.PacketProcessor;
@@ -20,7 +21,12 @@ public class ClientPluginMessage implements Packet.Client {
     @Override
     public void read(NetworkBuffer buffer) {
         this.channel = buffer.readString();
-        this.data = buffer;
+        int length = buffer.remaining();
+        
+        NetworkBuffer data = new NetworkBuffer(Unpooled.buffer(65536));
+        data.writeBytes(buffer.readBytes(length));
+        
+        this.data = data;
     }
 
     @Override

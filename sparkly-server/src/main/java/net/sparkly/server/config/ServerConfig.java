@@ -15,7 +15,6 @@ public class ServerConfig {
         this.server = server;
     }
 
-
     public void load() {
         File configDir = new File("configs");
 
@@ -52,6 +51,11 @@ public class ServerConfig {
         } catch (Exception e) {
             server.logger().error("Exception while creating {}", file.getName(), e);
         }
+    }
+    
+    public Component message(String path) {
+        String message = (String) Config.MESSAGES.configValues().get(path);
+        return MinecraftServer.MINI_MESSAGE.deserialize(message);
     }
     
     public String brand() {

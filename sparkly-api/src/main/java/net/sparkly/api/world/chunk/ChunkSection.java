@@ -5,7 +5,7 @@ public interface ChunkSection {
     
     char blockAt(int x, int y, int z);
     
-    void setBlockAt(int x, int y, int z, char value);
+    void setBlock(int x, int y, int z, char value);
 
     int nonAirBlocks();
 }
