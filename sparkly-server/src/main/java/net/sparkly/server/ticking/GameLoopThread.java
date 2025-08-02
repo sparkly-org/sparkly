@@ -15,10 +15,12 @@ import java.util.concurrent.locks.LockSupport;
 public class GameLoopThread extends Thread {
 
     private final List<Runnable> scheduledTasks = new ArrayList<>();
+    private final List<Runnable> permanentTasks = new ArrayList<>();
     private final MinecraftServer server;
 
     public GameLoopThread(MinecraftServer server) {
         this.server = server;
+        this.permanentTasks.add(new KeepAliveThread(server));
     }
 
     @Override
@@ -41,6 +43,10 @@ public class GameLoopThread extends Thread {
     }
     
     private void tick() {
+        for (Runnable task : permanentTasks) {
+            task.run();
+        }
+
         for (Runnable task : scheduledTasks) {
             task.run();
         }

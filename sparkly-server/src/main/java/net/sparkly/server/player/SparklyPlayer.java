@@ -14,82 +14,126 @@ import net.sparkly.server.config.ServerConfig;
 import net.sparkly.server.network.model.PlayerConnection;
 import net.sparkly.server.network.packets.impl.server.play.ServerPositionAndLook;
 import net.sparkly.server.network.packets.impl.server.play.ServerRespawn;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.SignatureSpi;
 
 import java.util.UUID;
 
 public class SparklyPlayer implements Player {
-    
+
     private final MinecraftServer server;
     private final GameProfile gameProfile;
     private final PlayerConnection connection;
     private Location location;
     private double health;
-    
+
+    private int lastKeepAliveId;
+    private long lastKeepAliveTime;
+    private long lastKeepAliveReceived;
+
     public SparklyPlayer(MinecraftServer server, GameProfile gameProfile, PlayerConnection connection) {
         this.server = server;
         this.gameProfile = gameProfile;
         this.connection = connection;
     }
-    
+
     @Override
     public String name() {
         return gameProfile.username();
     }
-    
+
     @Override
     public void setName(String name) {
         gameProfile.setName(name);
     }
-    
+
     @Override
     public UUID uuid() {
         return gameProfile.uuid();
     }
-    
+
     @Override
     public void setUuid(UUID uuid) {
         gameProfile.setUuid(uuid);
     }
-    
+
     @Override
     public double health() {
         return health;
     }
-    
+
     @Override
     public void setHealth(double health) {
         this.health = health;
     }
-    
+
     @Override
     public Location location() {
         return location;
     }
-    
+
+    @Override
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+
     @Override
     public void teleport(Location newLocation) {
         this.location = newLocation;
         server.schedule(() -> {
             World currentWorld = location.world();
-            
+
             if (newLocation.world() != currentWorld) {
                 ServerConfig config = server.config();
                 Difficulty difficulty = Difficulty.values()[config.difficulty()];
-                
+
                 if (currentWorld != null) {
                     ServerRespawn respawn = new ServerRespawn(Dimension.OVERWORLD, difficulty, GameMode.SURVIVAL, LevelType.DEFAULT);
-                    
+
                     connection.sendPacket(respawn);
                 }
             }
-            
+
             ServerPositionAndLook teleport = new ServerPositionAndLook(newLocation, TeleportFlags.EMPTY);
             connection.sendPacket(teleport);
         });
     }
-    
+
     @Override
     public World world() {
         return location.world();
+    }
+
+
+    public PlayerConnection connection() {
+        return connection;
+    }
+
+    public int lastKeepAliveId() {
+        return lastKeepAliveId;
+    }
+
+    public void setLastKeepAliveId(int lastKeepAliveId) {
+        this.lastKeepAliveId = lastKeepAliveId;
+    }
+
+    public long lastKeepAliveTime() {
+        return lastKeepAliveTime;
+    }
+
+    public void setLastKeepAliveTime(long lastKeepAliveTime) {
+        this.lastKeepAliveTime = lastKeepAliveTime;
+    }
+
+    public long lastKeepAliveReceived() {
+        return lastKeepAliveReceived;
+    }
+
+    public void setLastKeepAliveReceived(long lastKeepAliveReceived) {
+        this.lastKeepAliveReceived = lastKeepAliveReceived;
+    }
+
+    public boolean isTimedOut() {
+        return System.currentTimeMillis() - lastKeepAliveReceived > 30000; // 30 seconds timeout
     }
 }

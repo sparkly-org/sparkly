@@ -178,10 +178,16 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
             connection.sendPacket(new ServerLoginSuccess(uuid, name), postLoginSuccess);
         });
     }
-    
+
     public void handleKeepAlive(ClientKeepAlive packet) {
+        SparklyPlayer player = connection.player();
+        if (player == null) return;
+
+        if (packet.id() == player.lastKeepAliveId()) {
+            player.setLastKeepAliveReceived(System.currentTimeMillis());
+        }
     }
-    
+
     public void handleChatMessage(ClientChatMessage packet) {
         CHAT_THREAD.submit(() -> {
             SparklyPlayer player = connection.player();
@@ -200,125 +206,132 @@ public record PacketProcessor(MinecraftServer server, PlayerConnection connectio
     public void handleUseEntity(ClientUseEntity packet) {
     
     }
-    
+
     public void handleIdle(ClientPlayerIdle packet) {
-    
+        SparklyPlayer player = connection.player();
+        if (player == null) return;
+
+        Location location = player.location();
+        if (location != null) {
+            // Update only the on ground status
+            Location newLocation = new Location(location.world(), location.x(), location.y(), location.z(),
+                    location.yaw(), location.pitch());
+            player.setLocation(newLocation);
+        }
     }
-    
+
     public void handlePosition(ClientPlayerPosition packet) {
-//        if (!ThreadScheduleUtils.ensureMainThread(packet, this)) return;
-//
-//        SparkyPlayer player = connection.getPlayer();
-//        Location location = player.getLocation();
-//
-//        double x = location.getX();
-//        double y = location.getY();
-//        double z = location.getZ();
-//
-//        double newX = packet.getX();
-//        double newY = packet.getY();
-//        double newZ = packet.getZ();
-//
-//        if (Double.isInfinite(newX) || Double.isNaN(newX)) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        if (Double.isInfinite(newY) || Double.isNaN(newY)) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        if (Double.isInfinite(newZ) || Double.isNaN(newZ)) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        double deltaX = Math.abs(newX - x);
-//        double deltaY = Math.abs(newY - y);
-//        double deltaZ = Math.abs(newZ - z);
-//
-//        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-//
-//        // TODO: Check for server added velocity
-//        if (distance > 5) {
-//            player.teleport(new Location(location.getWorld(), x, y, z, location.getYaw(), location.getPitch()));
-//        } else {
-//            location.setX(newX);
-//            location.setY(newY);
-//            location.setZ(newZ);
-//        }
+        SparklyPlayer player = connection.player();
+        if (player == null) return;
+
+        Location location = player.location();
+        if (location == null) return;
+
+        double x = location.x();
+        double y = location.y();
+        double z = location.z();
+
+        double newX = packet.x();
+        double newY = packet.y();
+        double newZ = packet.z();
+
+        if (Double.isInfinite(newX) || Double.isNaN(newX)) {
+            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
+            return;
+        }
+
+        if (Double.isInfinite(newY) || Double.isNaN(newY)) {
+            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
+            return;
+        }
+
+        if (Double.isInfinite(newZ) || Double.isNaN(newZ)) {
+            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
+            return;
+        }
+
+        double deltaX = Math.abs(newX - x);
+        double deltaY = Math.abs(newY - y);
+        double deltaZ = Math.abs(newZ - z);
+
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
+        if (distance > 10) {
+            player.teleport(new Location(location.world(), x, y, z, location.yaw(), location.pitch()));
+        } else {
+            Location newLocation = new Location(location.world(), newX, newY, newZ, location.yaw(), location.pitch());
+            player.setLocation(newLocation);
+        }
     }
-    
+
     public void handleLook(ClientPlayerLook packet) {
-//        if (!ThreadScheduleUtils.ensureMainThread(packet, this)) return;
-//
-//        SparkyPlayer player = connection.player();
-//        Location location = player.location();
-//
-//        float yaw = packet.yaw();
-//        float pitch = packet.pitch();
-//
-//        if (Double.isInfinite(yaw) || Double.isNaN(yaw)) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        if (Double.isInfinite(pitch) || Double.isNaN(pitch)) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        location.setYaw(yaw);
-//        location.setPitch(pitch);
+        SparklyPlayer player = connection.player();
+        if (player == null) return;
+
+        Location location = player.location();
+        if (location == null) return;
+
+        float yaw = packet.yaw();
+        float pitch = packet.pitch();
+
+        if (Double.isInfinite(yaw) || Double.isNaN(yaw)) {
+            connection.close(Component.text("Invalid rotation.").color(NamedTextColor.RED));
+            return;
+        }
+
+        if (Double.isInfinite(pitch) || Double.isNaN(pitch)) {
+            connection.close(Component.text("Invalid rotation.").color(NamedTextColor.RED));
+            return;
+        }
+
+        Location newLocation = new Location(location.world(), location.x(), location.y(), location.z(), yaw, pitch);
+        player.setLocation(newLocation);
     }
-    
+
     public void handlePositionAndLook(ClientPlayerPositionAndLook packet) {
-//        if (!ThreadScheduleUtils.ensureMainThread(packet, this)) return;
-//
-//        SparkyPlayer player = connection.player();
-//        Location location = player.location();
-//
-//        double x = location.x();
-//        double y = location.y();
-//        double z = location.z();
-//
-//        double newX = packet.x();
-//        double newY = packet.y();
-//        double newZ = packet.z();
-//
-//        float yaw = packet.yaw();
-//        float pitch = packet.pitch();
-//
-//        boolean invalidX = Double.isInfinite(newX) || Double.isNaN(newX);
-//        boolean invalidY = Double.isInfinite(newY) || Double.isNaN(newY);
-//        boolean invalidZ = Double.isInfinite(newZ) || Double.isNaN(newZ);
-//        boolean invalidYaw = Double.isInfinite(yaw) || Double.isNaN(yaw);
-//        boolean invalidPitch = Double.isInfinite(pitch) || Double.isNaN(pitch);
-//
-//        if (invalidX || invalidY || invalidZ || invalidYaw || invalidPitch) {
-//            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
-//            return;
-//        }
-//
-//        double deltaX = Math.abs(newX - x);
-//        double deltaY = Math.abs(newY - y);
-//        double deltaZ = Math.abs(newZ - z);
-//
-//        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-//
-//        // TODO: Check for server added velocity
-//        if (distance > 5) {
-//            player.teleport(new Location(location.world(), x, y, z, yaw, pitch));
-//        } else {
-//            location.setX(newX);
-//            location.setY(newY);
-//            location.setZ(newZ);
-//            location.setYaw(yaw);
-//            location.setPitch(pitch);
-//        }
+        SparklyPlayer player = connection.player();
+        if (player == null) return;
+
+        Location location = player.location();
+        if (location == null) return;
+
+        double x = location.x();
+        double y = location.y();
+        double z = location.z();
+
+        double newX = packet.x();
+        double newY = packet.y();
+        double newZ = packet.z();
+
+        float yaw = packet.yaw();
+        float pitch = packet.pitch();
+
+        boolean invalidX = Double.isInfinite(newX) || Double.isNaN(newX);
+        boolean invalidY = Double.isInfinite(newY) || Double.isNaN(newY);
+        boolean invalidZ = Double.isInfinite(newZ) || Double.isNaN(newZ);
+        boolean invalidYaw = Double.isInfinite(yaw) || Double.isNaN(yaw);
+        boolean invalidPitch = Double.isInfinite(pitch) || Double.isNaN(pitch);
+
+        if (invalidX || invalidY || invalidZ || invalidYaw || invalidPitch) {
+            connection.close(Component.text("Invalid position.").color(NamedTextColor.RED));
+            return;
+        }
+
+        double deltaX = Math.abs(newX - x);
+        double deltaY = Math.abs(newY - y);
+        double deltaZ = Math.abs(newZ - z);
+
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
+        // Basic anti-cheat: if player moves too fast, teleport them back
+        if (distance > 10) {
+            player.teleport(new Location(location.world(), x, y, z, yaw, pitch));
+        } else {
+            Location newLocation = new Location(location.world(), newX, newY, newZ, yaw, pitch);
+            player.setLocation(newLocation);
+        }
     }
-    
+
     public void handleHeldItemChange(ClientHeldItemChange packet) {
 //        if (!ThreadScheduleUtils.ensureMainThread(packet, this)) return;
 

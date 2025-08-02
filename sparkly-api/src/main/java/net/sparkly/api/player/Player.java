@@ -17,9 +17,11 @@ public interface Player {
     double health();
     
     void setHealth(double health);
-    
+
     Location location();
-    
+
+    void setLocation(Location location);
+
     void teleport(Location location);
 
     World world();

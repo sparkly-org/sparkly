@@ -7,7 +7,7 @@ import net.sparkly.server.network.packets.processor.PacketProcessor;
 
 public class ClientKeepAlive implements Packet.Client {
 
-    private long id;
+    private int id;
 
     @Override
     public void read(NetworkBuffer buffer) {
@@ -18,12 +18,12 @@ public class ClientKeepAlive implements Packet.Client {
     public void handle(PacketProcessor processor) {
         processor.handleKeepAlive(this);
     }
-    
-    public long id() {
+
+    public int id() {
         return id;
     }
-    
-    public void setId(long id) {
+
+    public void setId(int id) {
         this.id = id;
     }
 }
