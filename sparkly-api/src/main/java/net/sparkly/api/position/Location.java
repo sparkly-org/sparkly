@@ -2,7 +2,7 @@ package net.sparkly.api.position;
 
 import net.sparkly.api.world.World;
 
-public class Location extends Position {
+public class Location extends Vector {
 
     private World world;
     private float yaw;

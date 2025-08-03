@@ -46,4 +46,9 @@ public class PacketDecoder extends ByteToMessageDecoder {
         
         list.add(packet);
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+    }
 }

@@ -2,25 +2,25 @@ package net.sparkly.server.block;
 
 import net.sparkly.api.block.Block;
 import net.sparkly.api.block.Material;
-import net.sparkly.api.position.Position;
+import net.sparkly.api.position.Vector;
 
 public final class SparklyBlock implements Block {
     
     private final Material material;
-    private final Position position;
+    private final Vector vector;
     private int data;
     
-    public SparklyBlock(Material material, Position position) {
+    public SparklyBlock(Material material, Vector vector) {
         this.material = material;
-        this.position = position;
+        this.vector = vector;
     }
     
-    public static SparklyBlock fromCombined(int combinedId, Position position) {
+    public static SparklyBlock fromCombined(int combinedId, Vector vector) {
         char id = (char) (combinedId >> 4);
         int data = combinedId & 15;
         
         Material material = Material.fromId(id);
-        SparklyBlock block = new SparklyBlock(material, position);
+        SparklyBlock block = new SparklyBlock(material, vector);
         
         block.setData(data);
         return block;
@@ -32,8 +32,8 @@ public final class SparklyBlock implements Block {
     }
     
     @Override
-    public Position position() {
-        return position;
+    public Vector position() {
+        return vector;
     }
     
     @Override

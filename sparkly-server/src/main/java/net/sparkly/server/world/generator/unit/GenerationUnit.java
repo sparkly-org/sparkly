@@ -1,7 +1,7 @@
 package net.sparkly.server.world.generator.unit;
 
 import net.sparkly.api.block.Material;
-import net.sparkly.api.position.Position;
+import net.sparkly.api.position.Vector;
 import net.sparkly.api.world.World;
 import net.sparkly.api.world.chunk.Chunk;
 import net.sparkly.api.world.chunk.ChunkSection;
@@ -25,7 +25,7 @@ public record GenerationUnit(World world) {
         for (int chunkX = -CHUNK_RANGE; chunkX < CHUNK_RANGE; chunkX++) {
             for (int chunkZ = -CHUNK_RANGE; chunkZ < CHUNK_RANGE; chunkZ++) {
                 fillChunk(chunkX, chunkZ, minHeight, maxHeight, (section, x, y, z) -> {
-                    SparklyBlock block = new SparklyBlock(material, new Position(x, y, z));
+                    SparklyBlock block = new SparklyBlock(material, new Vector(x, y, z));
                     section.setBlock(x, y, z, block.state());
                 });
             }

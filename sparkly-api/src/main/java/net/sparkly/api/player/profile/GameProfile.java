@@ -1,4 +1,4 @@
-package net.sparkly.api.player;
+package net.sparkly.api.player.profile;
 
 import java.util.UUID;
 

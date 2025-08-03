@@ -1,11 +1,11 @@
 package net.sparkly.api.block;
 
-import net.sparkly.api.position.Position;
+import net.sparkly.api.position.Vector;
 
 public interface Block {
     Material material();
     
-    Position position();
+    Vector position();
     
     int data();
     

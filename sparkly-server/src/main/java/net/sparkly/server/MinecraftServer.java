@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -34,6 +35,7 @@ public class MinecraftServer implements Server {
     private final ServerConfig config;
     private final EventNode<Event> eventHandler;
     private final GameLoopThread gameLoop;
+    private final Random random;
 
     private Consumer<GenerationUnit> chunkGenerator;
     private NetworkManager networkManager;
@@ -45,6 +47,7 @@ public class MinecraftServer implements Server {
         this.config = new ServerConfig(this);
         this.eventHandler = new EventNode<>();
         this.gameLoop = new GameLoopThread(this);
+        this.random = new Random();
     }
     
     private void generateDefaultWorld() {
@@ -138,7 +141,11 @@ public class MinecraftServer implements Server {
     public GameLoopThread gameLoop() {
         return gameLoop;
     }
-    
+
+    public Random random() {
+        return random;
+    }
+
     public Consumer<GenerationUnit> chunkGenerator() {
         return chunkGenerator;
     }

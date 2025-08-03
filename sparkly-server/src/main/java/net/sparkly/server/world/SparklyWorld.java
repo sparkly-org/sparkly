@@ -1,8 +1,7 @@
 package net.sparkly.server.world;
 
 import net.sparkly.api.block.Block;
-import net.sparkly.api.block.Material;
-import net.sparkly.api.position.Position;
+import net.sparkly.api.position.Vector;
 import net.sparkly.api.world.World;
 import net.sparkly.api.world.chunk.Chunk;
 import net.sparkly.api.world.chunk.ChunkSection;
@@ -52,8 +51,8 @@ public class SparklyWorld implements World {
         
         char data = section.blockAt(x & 15, y & 15, z & 15);
         
-        Position position = new Position(x, y, z);
-        return SparklyBlock.fromCombined(data, position);
+        Vector vector = new Vector(x, y, z);
+        return SparklyBlock.fromCombined(data, vector);
     }
     
     @Override

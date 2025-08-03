@@ -1,4 +1,4 @@
-package net.sparkly.api.position;
+package net.sparkly.api.enums;
 
 public enum Facing {
 

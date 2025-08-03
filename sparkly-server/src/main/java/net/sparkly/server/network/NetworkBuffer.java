@@ -2,7 +2,7 @@ package net.sparkly.server.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import net.sparkly.api.position.Position;
+import net.sparkly.api.position.Vector;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -173,18 +173,18 @@ public record NetworkBuffer(ByteBuf buffer) {
         return buffer.readBoolean();
     }
     
-    public void writePosition(Position position) {
-        long encoded = ((long) (position.blockX() & 0x3FFFFFF) << 38)
-            | ((long) (position.blockZ() & 0x3FFFFFF) << 12)
-            | (position.blockY() & 0xFFF);
+    public void writePosition(Vector vector) {
+        long encoded = ((long) (vector.blockX() & 0x3FFFFFF) << 38)
+            | ((long) (vector.blockZ() & 0x3FFFFFF) << 12)
+            | (vector.blockY() & 0xFFF);
         writeLong(encoded);
     }
     
-    public Position readPosition() {
+    public Vector readPosition() {
         long value = readLong();
         int x = (int) (value >> 38);
         int y = (int) (value << 52 >> 52);
         int z = (int) (value << 26 >> 38);
-        return new Position(x, y, z);
+        return new Vector(x, y, z);
     }
 }

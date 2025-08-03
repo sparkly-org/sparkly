@@ -1,6 +1,6 @@
 package net.sparkly.server.network.packets.impl.server.play;
 
-import net.sparkly.api.player.GameMode;
+import net.sparkly.api.enums.GameMode;
 import net.sparkly.api.world.Difficulty;
 import net.sparkly.api.world.Dimension;
 import net.sparkly.api.world.LevelType;

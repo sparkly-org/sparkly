@@ -1,7 +1,7 @@
 package net.sparkly.server.network.packets.impl.client.play;
 
-import net.sparkly.api.player.ChatMode;
-import net.sparkly.api.player.GameSettings;
+import net.sparkly.api.enums.ChatMode;
+import net.sparkly.api.player.profile.GameSettings;
 import net.sparkly.server.network.NetworkBuffer;
 import net.sparkly.server.network.packets.Packet;
 import net.sparkly.server.network.packets.processor.PacketProcessor;
