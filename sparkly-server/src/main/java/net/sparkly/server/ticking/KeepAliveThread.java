@@ -6,11 +6,12 @@ import net.sparkly.server.network.packets.impl.server.play.ServerKeepAlive;
 import net.sparkly.server.player.SparklyPlayer;
 
 import java.util.Random;
+import java.util.SplittableRandom;
 
 public class KeepAliveThread implements Runnable {
 
     private final MinecraftServer server;
-    private final Random random = new Random();
+    private final Random random = Random.from(new SplittableRandom());
     private int tickCounter = 0;
 
     public KeepAliveThread(MinecraftServer server) {
@@ -26,7 +27,6 @@ public class KeepAliveThread implements Runnable {
         }
 
         for (var player : server.players()) {
-
             if (!(player instanceof SparklyPlayer sparklyPlayer)) {
                 continue;
             }
@@ -44,5 +44,4 @@ public class KeepAliveThread implements Runnable {
             connection.sendPacket(new ServerKeepAlive(keepAliveId));
         }
     }
-
 }

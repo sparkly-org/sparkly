@@ -66,6 +66,12 @@ public record RandomWorldGenerator(int height) implements Consumer<GenerationUni
             }
         }
         
+        for (int x = 0; x < map.length; x++) {
+            for (int z = 0; z < map.length; z++) {
+                map[x][z] = (float) Math.pow(map[x][z], 1.5);
+            }
+        }
+        
         for (int chunkX = -CHUNK_RANGE; chunkX < CHUNK_RANGE; chunkX++) {
             for (int chunkZ = -CHUNK_RANGE; chunkZ < CHUNK_RANGE; chunkZ++) {
                 Chunk chunk = world.chunkAt(chunkX, chunkZ);

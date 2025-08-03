@@ -10,7 +10,7 @@ public class SparkyLoader {
     
     public static void main(String[] args) {
         MinecraftServer server = new MinecraftServer();
-        server.setChunkGenerator(new RandomWorldGenerator(60));
+        server.setChunkGenerator(new RandomWorldGenerator(30));
         server.start();
         
         World world = server.worlds().getFirst();
